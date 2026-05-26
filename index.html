@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Hue & Rotate Editor</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 40px; 
+            background-color: #f4f4f9;
+        }
+        
+        .editor-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        #videoPlayer { 
+            max-width: 500px; 
+            margin-top: 20px; 
+            border-radius: 8px;
+            background-color: #000;
+        }
+
+        .control-group { margin: 15px 0; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input[type="range"] { width: 300px; }
+    </style>
+</head>
+<body>
+
+    <div class="editor-container">
+        <h2>Video Adjuster</h2>
+        <input type="file" id="upload" accept="video/*">
+
+        <div class="control-group">
+            <label>Hue Rotate: <span id="hueVal">0deg</span></label>
+            <input type="range" id="hueRange" min="0" max="360" value="0">
+        </div>
+
+        <div class="control-group">
+            <label>Rotation: <span id="rotateVal">0deg</span></label>
+            <input type="range" id="rotateRange" min="0" max="360" value="0">
+        </div>
+
+        <video id="videoPlayer" controls></video>
+    </div>
+
+    <script>
+        const upload = document.getElementById('upload');
+        const video = document.getElementById('videoPlayer');
+        const hueRange = document.getElementById('hueRange');
+        const rotateRange = document.getElementById('rotateRange');
+        const hueVal = document.getElementById('hueVal');
+        const rotateVal = document.getElementById('rotateVal');
+
+        // Load video
+        upload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                video.src = URL.createObjectURL(file);
+            }
+        });
+
+        // Apply transformations
+        function updateVideo() {
+            const hue = hueRange.value;
+            const rot = rotateRange.value;
+            
+            video.style.filter = `hue-rotate(${hue}deg)`;
+            video.style.transform = `rotate(${rot}deg)`;
+            
+            hueVal.textContent = `${hue}deg`;
+            rotateVal.textContent = `${rot}deg`;
+        }
+
+        hueRange.addEventListener('input', updateVideo);
+        rotateRange.addEventListener('input', updateVideo);
+    </script>
+</body>
+</html>
